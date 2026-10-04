@@ -1,24 +1,20 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.Commons
+import qs.Ui
 
-Item {
+BarWidget {
   id: root
-
-  property QtObject bar: null
-  property string moduleName: "shusui.flow-dictation"
-  property var settings: ({})
-  property bool recording: false
+  moduleName: "shusui.flow-dictation"
 
   readonly property string home: Quickshell.env("HOME") || ""
   readonly property string configHome: Quickshell.env("XDG_CONFIG_HOME") || home + "/.config"
   readonly property string commandPath: configHome + "/omarchy/plugins/" + moduleName + "/flow_dictation.py"
-  readonly property string tooltip: recording
-    ? "Flow Dictation is recording — click to stop and insert text"
-    : "Flow Dictation — click to start recording"
+  property bool recording: false
 
-  implicitWidth: bar && bar.vertical ? bar.barSize : 27
-  implicitHeight: bar && !bar.vertical ? bar.barSize : 27
+  implicitWidth: button.implicitWidth
+  implicitHeight: button.implicitHeight
 
   function refreshStatus() {
     if (!statusProcess.running) statusProcess.running = true
@@ -54,48 +50,41 @@ Item {
 
   Component.onCompleted: refreshStatus()
 
-  Item {
-    id: icon
-    anchors.centerIn: parent
-    width: 20
-    height: 20
-
-    readonly property color iconColor: root.recording && root.bar
-      ? root.bar.urgent
-      : root.bar ? root.bar.barForeground : "white"
-    readonly property string iconFont: root.bar ? root.bar.fontFamily : ""
-
-    Text {
-      x: 0
-      y: 1
-      text: "󰚩"
-      color: icon.iconColor
-      font.family: icon.iconFont
-      font.pixelSize: 14
-      renderType: Text.NativeRendering
-    }
-
-    Text {
-      anchors.right: parent.right
-      anchors.bottom: parent.bottom
-      anchors.rightMargin: 0
-      anchors.bottomMargin: 0
-      text: "󰍬"
-      color: icon.iconColor
-      font.family: icon.iconFont
-      font.pixelSize: 10
-      renderType: Text.NativeRendering
-    }
-  }
-
-  MouseArea {
-    id: clickArea
+  BarIconButton {
+    id: button
     anchors.fill: parent
-    acceptedButtons: Qt.LeftButton
-    hoverEnabled: true
-    cursorShape: Qt.PointingHandCursor
-    onEntered: if (root.bar) root.bar.showTooltip(root, root.tooltip)
-    onExited: if (root.bar) root.bar.hideTooltip(root)
-    onClicked: root.toggle()
+    bar: root.bar
+    active: root.recording
+    useActiveColor: true
+    tooltipText: root.recording
+      ? "Flow Dictation is recording — click to stop and insert text"
+      : "Flow Dictation — click to start recording"
+    iconComponent: Component {
+      Item {
+        Text {
+          x: 0
+          y: 2
+          text: "󰚩"
+          color: button.active && button.useActiveColor ? button.activeColor : button.foreground
+          font.family: button.fontFamily
+          font.pixelSize: 14
+          renderType: Text.NativeRendering
+        }
+        Text {
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+          anchors.rightMargin: 0
+          anchors.bottomMargin: 1
+          text: "󰍬"
+          color: button.active && button.useActiveColor ? button.activeColor : button.foreground
+          font.family: button.fontFamily
+          font.pixelSize: 10
+          renderType: Text.NativeRendering
+        }
+      }
+    }
+    onPressed: function(buttonCode) {
+      if (buttonCode === Qt.LeftButton) root.toggle()
+    }
   }
 }

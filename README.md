@@ -4,6 +4,12 @@ A small system-wide voice dictation helper for Omarchy/Hyprland, inspired by Wis
 
 This plugin is community code. It runs unsandboxed with your user permissions; inspect the source before installing. Marketplace listing and validation are not a security review.
 
+## Screenshot
+
+The combined assistant and microphone button appears in the Omarchy bar. Click it to start or stop dictation.
+
+<img src="screenshots/flow-dictation-bar.png" alt="Flow Dictation button in the Omarchy bar" width="900">
+
 ## Install
 
 Requirements: Omarchy Quattro, Python 3, `pw-record`, `wtype`, `notify-send`, `whisper-cli` with a Whisper model, and Ollama with the `qwen2.5:7b` model for local correction. Omarchy provides `hyprctl`, the plugin manager, and the Hyprland bindings file. The script checks the system commands it needs; it does not install packages or download models.

@@ -11,7 +11,7 @@ for bin in python3 pw-record wtype notify-send; do
   command -v "$bin" >/dev/null || { echo "Missing required command: $bin" >&2; exit 1; }
 done
 [[ -f "$BINDINGS" ]] || { echo "Omarchy Hyprland bindings file not found: $BINDINGS" >&2; exit 1; }
-if ! rg -qF -- "$MARK" "$BINDINGS" && rg -q 'SUPER\s*\+\s*(ALT\s*\+\s*)?XF86Fn' "$BINDINGS"; then
+if ! rg -qF -- "$MARK" "$BINDINGS" && rg -q 'SUPER\s*\+\s*(ALT\s*\+\s*)?(XF86Fn|SHIFT\s*\+\s*V)' "$BINDINGS"; then
   echo "A dictation shortcut appears in $BINDINGS. Resolve that binding before installing." >&2
   exit 1
 fi
