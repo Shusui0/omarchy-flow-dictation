@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "shusui.flow-dictation",
+  "name": "Flow Dictation",
+  "version": "1.0.0",
+  "author": "Shusui",
+  "license": "MIT",
+  "description": "System-wide voice dictation for Omarchy with local transcription, correction, and direct typing.",
+  "kinds": ["bar-widget"],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Flow Dictation",
+    "description": "Click to start or stop voice dictation.",
+    "category": "Productivity",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}
