@@ -38,6 +38,11 @@ CLEANUP_INSTRUCTIONS = (
 )
 
 
+class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
 def notify(message: str, urgency: str = "normal") -> None:
     cmd = shutil.which("notify-send")
     if cmd:
@@ -173,7 +178,8 @@ def api_request(cfg: configparser.ConfigParser, url: str, body: bytes,
         "Authorization": f"Bearer {key}", "Content-Type": content_type,
     })
     try:
-        with urllib.request.urlopen(req, timeout=180) as response:
+        opener = urllib.request.build_opener(NoRedirectHandler)
+        with opener.open(req, timeout=180) as response:
             return json.loads(response.read())
     except urllib.error.HTTPError as exc:
         raise RuntimeError(f"Cloud request failed (HTTP {exc.code}). Check provider settings and connectivity.") from None
